@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uthej Alagani — Mission Dossier [Metal Slug Edition]</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap">
+<style>
+  /* ==========================================================================
+     METAL SLUG (NEO-GEO 16-BIT RUN & GUN) ARCADE PORTFOLIO THEME
+     Steel bunkers, hazard stripes, animated R-Shobu Chopper & SV-001 Tank,
+     weapon crates [H][R][S], and arcade HUD.
+     ========================================================================== */
+  :root{
+    --bg:#161b16;          /* dark olive-gunmetal warzone ground */
+    --bg-alt:#1d241c;      /* secondary bunker steel */
+    --panel:#252d24;       /* heavy armour plate */
+    --panel-2:#303a2e;     /* raised steel plate */
+    --ink:#0a0d0a;         /* deep black iron outline / shadow */
+    --border:#586854;      /* weathered steel bevel */
+    --fg:#f4f1de;          /* high-contrast warm ivory text */
+    --muted:#c4c1aa;       /* tactical khaki readable body text */
+    --green:#5ce65c;       /* arcade radar / 1UP neon green */
+    --army:#3e6b2c;        /* military olive green */
+    --gold:#ffcc00;        /* Heavy Machine Gun [H] arcade gold */
+    --red:#ff4d1a;         /* explosion flame orange-red */
+    --crimson:#b82514;     /* barn/brick red */
+    --blue:#4dd0e1;        /* plasma / laser cyan */
+    --link:#ffd633;        /* arcade gold links */
+    --font-pixel:"Press Start 2P", ui-monospace, monospace;
+    --font-body:"IBM Plex Sans", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    --font-mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    color-scheme: dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+
+  body{
+    margin:0;
+    background-color:var(--bg);
+    background-image:
+      radial-gradient(rgba(255,204,0,.04) 1px, transparent 0),
+      linear-gradient(180deg, rgba(0,0,0,.25) 50%, transparent 50%);
+    background-size:24px 24px, 100% 4px;
+    color:var(--fg);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  .wrap{position:relative;z-index:1}
+
+  a{color:var(--link);text-decoration:none;font-weight:600}
+  a:hover{color:var(--red);text-decoration:underline}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+  .shell{
+    width:100%;max-width:1100px;margin-inline:auto;
+    padding-left:max(18px, env(safe-area-inset-left,0px));
+    padding-right:max(18px, env(safe-area-inset-right,0px));
+  }
+
+  /* Hazard Stripe Bar */
+  .hazard-bar{
+    height:10px;
+    background:repeating-linear-gradient(
+      -45deg,
+      var(--gold),
+      var(--gold) 12px,
+      #111 12px,
+      #111 24px
+    );
+    border-top:2px solid var(--ink);
+    border-bottom:2px solid var(--ink);
+  }
+
+  /* ---------- ARCADE HUD NAV ---------- */
+  nav{
+    position:sticky;top:env(safe-area-inset-top,0px);z-index:50;
+    background:rgba(20,25,20,.96);backdrop-filter:blur(6px);
+    border-bottom:4px solid var(--ink);
+    box-shadow:0 4px 0 rgba(0,0,0,.6);
+  }
+  .navbar{display:flex;align-items:center;gap:14px;padding-block:10px;flex-wrap:wrap}
+  .hud-cluster{
+    display:flex;align-items:center;gap:12px;flex:none;
+  }
+  .logo{
+    font-family:var(--font-pixel);font-size:12px;color:#111;
+    background:var(--gold);border:3px solid var(--ink);
+    box-shadow:inset -2px -2px 0 #b38600, 3px 3px 0 var(--ink);
+    padding:7px 10px;flex:none;letter-spacing:.04em;
+  }
+  .hud-stat{
+    display:flex;flex-direction:column;gap:3px;
+    font-family:var(--font-pixel);font-size:9px;line-height:1.2;
+  }
+  .hud-stat .lbl{color:var(--red)}
+  .hud-stat .val{color:var(--gold);letter-spacing:.06em}
+  .hp-bar{
+    width:72px;height:8px;background:#111;border:2px solid var(--fg);padding:1px;
+  }
+  .hp-fill{
+    width:100%;height:100%;
+    background:linear-gradient(90deg, var(--red) 0%, var(--gold) 50%, var(--green) 100%);
+  }
+  .arms-box{
+    display:flex;align-items:center;gap:6px;
+    background:#111;border:2px solid var(--border);padding:4px 8px;
+    font-family:var(--font-pixel);font-size:9px;color:var(--gold);
+  }
+  .crate-icon{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:20px;height:20px;background:var(--gold);color:#111;
+    border:2px solid var(--ink);font-family:var(--font-pixel);font-size:10px;font-weight:700;
+    box-shadow:inset -2px -2px 0 #b38600;
+  }
+
+  .navlinks{
+    display:flex;gap:14px;margin-left:auto;overflow-x:auto;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  }
+  .navlinks::-webkit-scrollbar{display:none}
+  .navlinks a{
+    font-family:var(--font-mono);font-weight:700;font-size:12px;
+    text-transform:uppercase;letter-spacing:.08em;color:var(--fg);white-space:nowrap;
+    padding:4px 6px;border:2px solid transparent;
+  }
+  .navlinks a:hover{
+    color:#111;background:var(--gold);border-color:var(--ink);text-decoration:none;
+  }
+
+  /* ---------- HERO BATTLEFIELD ---------- */
+  .hero{
+    position:relative;overflow:hidden;
+    border-bottom:4px solid var(--ink);
+    background:linear-gradient(
+      180deg,
+      #1b192e 0%,
+      #3a233b 28%,
+      #78312c 56%,
+      #b5592a 78%,
+      #d98a36 92%,
+      #2d3823 92%,
+      #1e2618 100%
+    );
+  }
+  /* Distant pixel mountains / ruins silhouette */
+  .battlefield-bg{
+    position:absolute;inset:0;pointer-events:none;z-index:1;
+    background-image:
+      linear-gradient(180deg, transparent 84%, rgba(15,20,12,.9) 84%, #1a2216 92%);
+  }
+  /* Ground sandbags & steel floor strip */
+  .ground-strip{
+    position:absolute;bottom:0;left:0;right:0;height:36px;z-index:2;
+    background:
+      repeating-linear-gradient(90deg, #3c4a30 0 28px, #2b3622 28px 32px);
+    border-top:4px solid var(--ink);
+    box-shadow:inset 0 4px 0 #556644;
+  }
+
+  /* ---------- ANIMATED CHOPPER (R-SHOBU HELICOPTER) ---------- */
+  .chopper-track{
+    position:absolute;top:24px;left:0;width:100%;height:110px;
+    pointer-events:none;z-index:3;overflow:hidden;
+  }
+  .chopper-unit{
+    position:absolute;top:8px;
+    width:170px;height:86px;
+    pointer-events:auto;cursor:crosshair;
+    animation:chopperPatrol 18s ease-in-out infinite;
+    filter:drop-shadow(4px 6px 0 rgba(0,0,0,.65));
+    user-select:none;
+  }
+  .chopper-unit:hover{transform:scale(1.06)}
+  .chopper-rotor{
+    transform-origin:78px 12px;
+    animation:rotorSpin .12s steps(2) infinite;
+  }
+  .chopper-searchlight{
+    opacity:.35;
+    animation:searchlightSweep 3.5s ease-in-out infinite alternate;
+  }
+  @keyframes chopperPatrol{
+    0%   { left:calc(100% - 210px); transform:translateY(0) rotate(-2deg); }
+    25%  { transform:translateY(8px) rotate(-4deg); }
+    48%  { left:42%; transform:translateY(-4px) rotate(1deg); }
+    50%  { left:42%; transform:translateY(0) scaleX(-1) rotate(-2deg); }
+    75%  { transform:translateY(10px) scaleX(-1) rotate(-4deg); }
+    98%  { left:calc(100% - 210px); transform:translateY(-2px) scaleX(-1); }
+    100% { left:calc(100% - 210px); transform:translateY(0) rotate(-2deg); }
+  }
+  @keyframes rotorSpin{
+    0%  { transform:scaleX(1); }
+    100%{ transform:scaleX(-0.2); }
+  }
+  @keyframes searchlightSweep{
+    0%  { transform:rotate(-8deg); transform-origin:60px 58px; }
+    100%{ transform:rotate(12deg); transform-origin:60px 58px; }
+  }
+
+  /* ---------- PARACHUTING [H] WEAPON DROP ---------- */
+  .supply-drop{
+    position:absolute;top:30px;right:24%;z-index:2;
+    width:54px;height:74px;cursor:pointer;
+    animation:chuteFloat 9s ease-in-out infinite;
+    filter:drop-shadow(3px 3px 0 rgba(0,0,0,.6));
+  }
+  @keyframes chuteFloat{
+    0%  { transform:translateY(-15px) rotate(-6deg); }
+    50% { transform:translateY(22px) rotate(6deg); }
+    100%{ transform:translateY(-15px) rotate(-6deg); }
+  }
+
+  /* ---------- SV-001 METAL SLUG TANK (BOTTOM RIGHT) ---------- */
+  .sv001-tank{
+    position:absolute;bottom:14px;right:28px;z-index:4;
+    width:180px;height:112px;cursor:pointer;
+    animation:tankIdle .45s steps(2) infinite;
+    filter:drop-shadow(5px 5px 0 var(--ink));
+    user-select:none;
+  }
+  .sv001-tank:hover{filter:drop-shadow(0 0 8px var(--gold)) drop-shadow(5px 5px 0 var(--ink))}
+  .tank-muzzle{opacity:0;transition:opacity .08s}
+  .sv001-tank.firing .tank-muzzle{opacity:1}
+  @keyframes tankIdle{
+    0%  { transform:translateY(0); }
+    100%{ transform:translateY(2px); }
+  }
+
+  .hero-inner{padding-block:54px 72px;position:relative;z-index:5}
+  .mission-banner{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--font-pixel);font-size:11px;color:var(--gold);
+    background:#111;border:3px solid var(--red);
+    box-shadow:4px 4px 0 var(--ink);
+    padding:8px 12px;margin:0 0 18px;
+  }
+  .blink{animation:arcadeBlink 1s steps(2) infinite;color:var(--red)}
+  @keyframes arcadeBlink{0%{opacity:1}100%{opacity:.15}}
+
+  h1.name{
+    font-family:var(--font-pixel);
+    font-size:clamp(1.4rem,6vw,3rem);line-height:1.35;margin:0;
+    color:var(--gold);
+    text-shadow:
+      -3px 0 var(--ink),3px 0 var(--ink),0 -3px var(--ink),0 3px var(--ink),
+      0 4px 0 var(--crimson), 6px 6px 0 var(--ink);
+    text-wrap:balance;word-break:break-word;
+  }
+  .role{
+    font-family:var(--font-mono);font-weight:700;
+    font-size:clamp(1rem,2.6vw,1.25rem);margin:16px 0 0;color:#fff;
+    text-shadow:2px 2px 0 var(--ink);
+  }
+  .stack-ticker{
+    font-family:var(--font-mono);font-size:13px;color:#ffe7a0;
+    background:rgba(10,13,10,.78);border-left:4px solid var(--gold);
+    padding:8px 12px;margin:12px 0 0;max-width:78ch;
+    box-shadow:3px 3px 0 var(--ink);
+  }
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+  .badge{
+    font-family:var(--font-mono);font-weight:700;font-size:12px;
+    padding:6px 11px;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);
+    background:var(--panel-2);color:var(--fg);text-transform:uppercase;letter-spacing:.04em;
+  }
+  .badge.live{background:var(--army);color:var(--green);border-color:var(--ink)}
+  .badge.flag{background:var(--gold);color:#111}
+  .badge.loc{background:var(--crimson);color:#fff}
+  .cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+  .btn{
+    font-family:var(--font-pixel);font-size:11px;cursor:pointer;
+    padding:13px 16px;border:3px solid var(--ink);
+    box-shadow:inset -2px -2px 0 rgba(0,0,0,.45), 4px 4px 0 var(--ink);
+    background:var(--panel-2);color:var(--fg);transition:transform .08s, box-shadow .08s;
+    display:inline-flex;align-items:center;gap:8px;line-height:1.5;
+    text-transform:uppercase;
+  }
+  .btn.primary{
+    background:var(--red);color:#fff;
+    box-shadow:inset -2px -2px 0 #8f1d00, 4px 4px 0 var(--ink);
+  }
+  .btn.ghost{background:var(--gold);color:#111;box-shadow:inset -2px -2px 0 #9e7600, 4px 4px 0 var(--ink)}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);color:#fff;background:var(--crimson);text-decoration:none}
+  .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+
+  /* ---------- SECTIONS ---------- */
+  section{padding-block:56px;scroll-margin-top:84px;position:relative;z-index:1}
+  section + section{border-top:3px dashed #364233}
+  .sec-eyebrow{
+    font-family:var(--font-pixel);font-size:10px;color:var(--red);
+    text-shadow:2px 2px 0 var(--ink);margin:0 0 10px;letter-spacing:.06em;
+  }
+  h2{
+    font-family:var(--font-pixel);font-size:clamp(1rem,3.4vw,1.45rem);
+    margin:0 0 26px;color:var(--gold);
+    text-shadow:3px 3px 0 var(--ink);text-wrap:balance;
+    text-transform:uppercase;
+  }
+  h3{font-family:var(--font-mono);font-weight:700;margin:0}
+  p{color:var(--muted);max-width:68ch}
+  .lead{color:var(--fg);font-weight:600}
+
+  /* Steel Bunker Panels with Corner Rivets */
+  .panel{
+    position:relative;
+    background:var(--panel);
+    border:3px solid var(--ink);
+    outline:2px solid var(--border);
+    outline-offset:-5px;
+    box-shadow:6px 6px 0 var(--ink);
+    padding:24px;
+  }
+  .panel::before,.panel::after{
+    content:"";position:absolute;width:6px;height:6px;
+    background:var(--border);border:1px solid var(--ink);
+  }
+  .panel::before{top:8px;left:8px;box-shadow:calc(100% - 22px) 0 0 var(--border)}
+  .panel::after{bottom:8px;left:8px}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:24px;align-items:start}
+  .facts{display:flex;flex-direction:column;gap:12px}
+  .dossier-title{
+    font-family:var(--font-pixel);font-size:10px;color:var(--gold);
+    border-bottom:2px solid var(--border);padding-bottom:8px;margin-bottom:4px;
+  }
+  .fact{display:flex;justify-content:space-between;gap:10px;font-family:var(--font-mono);font-size:13.5px;border-bottom:1px dashed rgba(255,255,255,.1);padding-bottom:5px}
+  .fact span:first-child{color:var(--muted)}
+  .fact span:last-child{color:var(--green);font-weight:700;text-align:right}
+
+  /* SKILLS (WEAPON ARSENAL) */
+  .skillgroups{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .skillgroup{
+    background:var(--panel);border:3px solid var(--ink);
+    box-shadow:4px 4px 0 var(--ink);padding:18px;
+  }
+  .skillgroup h3{
+    display:flex;align-items:center;gap:8px;
+    font-size:14px;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    font-family:var(--font-mono);font-size:12.5px;font-weight:600;
+    padding:5px 10px;background:var(--panel-2);border:2px solid var(--ink);
+    box-shadow:2px 2px 0 var(--ink);color:var(--fg);cursor:default;
+    transition:transform .06s, background .06s;
+  }
+  .chip:hover{transform:translateY(-2px);border-color:var(--gold)}
+  .chip.cert{background:var(--gold);color:#111;font-weight:700}
+
+  /* PROJECTS (COMBAT MISSIONS) */
+  .filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+  .filter{
+    font-family:var(--font-pixel);font-size:10px;cursor:pointer;
+    text-transform:uppercase;letter-spacing:.04em;
+    padding:10px 14px;background:var(--panel);color:var(--muted);
+    border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);
+  }
+  .filter:hover{color:var(--fg);border-color:var(--gold)}
+  .filter[aria-pressed="true"]{
+    background:var(--red);color:#fff;
+    box-shadow:inset -2px -2px 0 #8f1d00, 3px 3px 0 var(--ink);
+  }
+  .projects{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+  .card{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .card .tags{display:flex;flex-wrap:wrap;gap:6px}
+  .tag{
+    font-family:var(--font-mono);font-size:11px;color:#111;background:var(--gold);
+    padding:2px 7px;border:1px solid var(--ink);
+    font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  }
+  .card h3{font-size:16.5px;color:#fff}
+  .card p{font-size:14px;margin:0}
+  .card ul{margin:4px 0 0;padding-left:18px;color:var(--muted);font-size:13.5px;display:flex;flex-direction:column;gap:5px}
+  .card ul li{line-height:1.5}
+  .metrics{
+    display:flex;flex-wrap:wrap;gap:16px;margin-top:4px;
+    background:rgba(0,0,0,.35);border:2px solid var(--ink);padding:10px 12px;
+  }
+  .metric{display:flex;flex-direction:column}
+  .metric b{font-family:var(--font-pixel);font-size:13px;color:var(--green);text-shadow:2px 2px 0 var(--ink)}
+  .metric small{font-family:var(--font-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
+  .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:auto;padding-top:6px}
+  .links a{
+    font-family:var(--font-pixel);font-size:10px;text-transform:uppercase;letter-spacing:.04em;
+    background:var(--panel-2);padding:7px 10px;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink);
+  }
+  .links a:hover{background:var(--gold);color:#111;text-decoration:none}
+
+  /* TIMELINE (SERVICE RECORD) */
+  .timeline{display:flex;flex-direction:column;gap:20px}
+  .job{display:grid;grid-template-columns:auto 1fr;gap:16px}
+  .job .dot{
+    width:22px;height:22px;background:var(--red);border:3px solid var(--ink);
+    box-shadow:2px 2px 0 var(--ink);margin-top:6px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-pixel);font-size:9px;color:#fff;
+  }
+  .job .when{font-family:var(--font-mono);font-size:12.5px;color:var(--gold);font-weight:700;margin:0 0 4px;text-transform:uppercase;letter-spacing:.04em}
+  .job h3{font-size:16px;color:#fff;margin-top:2px}
+  .job .org{font-family:var(--font-mono);font-size:13.5px;color:var(--green);font-weight:700;margin-bottom:8px}
+  .job ul{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:14.5px;display:flex;flex-direction:column;gap:6px;max-width:78ch}
+  .job ul li{line-height:1.55}
+
+  /* EDUCATION */
+  .edu{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .edu .when{font-family:var(--font-mono);font-size:12px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin:0 0 6px}
+  .edu h3{color:#fff;font-size:15.5px}
+  .edu .org{font-family:var(--font-mono);font-size:13px;color:var(--green);font-weight:700;margin-top:2px}
+  .edu p.note{font-size:14px}
+
+  /* CONTACT */
+  .contact .panel{text-align:center;display:flex;flex-direction:column;gap:16px;align-items:center}
+  .contact h2{margin-bottom:4px}
+  .email-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}
+  .email{
+    font-family:var(--font-mono);font-weight:700;font-size:15px;color:var(--green);
+    background:#111;padding:8px 14px;border:2px solid var(--border);word-break:break-all;
+  }
+  .copybtn{
+    font-family:var(--font-pixel);font-size:10px;cursor:pointer;
+    padding:10px 12px;background:var(--gold);color:#111;
+    border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);
+    text-transform:uppercase;
+  }
+  .copybtn:hover{background:var(--red);color:#fff}
+
+  footer{
+    padding-block:28px;text-align:center;
+    background:#101410;border-top:4px solid var(--ink);
+  }
+  footer p{font-family:var(--font-pixel);font-size:10px;color:var(--gold);margin:0 auto;line-height:1.8}
+
+  /* Floating Arcade Callouts ("HEAVY MACHINE GUN!", "+500 PTS") */
+  .arcade-popup{
+    position:fixed;pointer-events:none;z-index:999;
+    font-family:var(--font-pixel);font-size:11px;color:var(--gold);
+    text-shadow:-2px 0 #000, 2px 0 #000, 0 -2px #000, 0 2px #000, 3px 3px 0 var(--red);
+    animation:floatUp .95s ease-out forwards;
+    white-space:nowrap;
+  }
+  @keyframes floatUp{
+    0%  { opacity:1; transform:translateY(0) scale(.9); }
+    40% { opacity:1; transform:translateY(-22px) scale(1.08); }
+    100%{ opacity:0; transform:translateY(-48px) scale(1); }
+  }
+
+  /* responsive */
+  @media (max-width:820px){
+    .about-grid,.skillgroups,.projects,.edu{grid-template-columns:1fr}
+    .hero-inner{padding-block:48px 110px}
+    .sv001-tank{width:140px;height:88px;right:12px;bottom:10px}
+    .supply-drop{display:none}
+  }
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- NEO-GEO ARCADE HUD TOP BAR -->
+  <nav aria-label="Primary navigation">
+    <div class="shell navbar">
+      <div class="hud-cluster">
+        <span class="logo">1UP</span>
+        <div class="hud-stat">
+          <span class="lbl">PLAYER 1 // HP</span>
+          <div class="hp-bar" title="Health: 100%"><div class="hp-fill"></div></div>
+        </div>
+        <div class="hud-stat">
+          <span class="lbl">SCORE</span>
+          <span class="val" id="hud-score">0084100</span>
+        </div>
+        <div class="arms-box" title="Heavy Machine Gun Equipped">
+          <span class="crate-icon">H</span>
+          <span>ARMS <b id="hud-ammo">999</b></span>
+        </div>
+      </div>
+
+      <div class="navlinks">
+        <a href="#about">Briefing</a>
+        <a href="#skills">Arsenal</a>
+        <a href="#projects">Missions</a>
+        <a href="#experience">Service</a>
+        <a href="#education">Academy</a>
+        <a href="#contact">Comms</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="battlefield-bg" aria-hidden="true"></div>
+
+    <!-- ANIMATED PIXEL R-SHOBU HELICOPTER (CHOPPER) -->
+    <div class="chopper-track" aria-hidden="true">
+      <div class="chopper-unit" id="chopper" title="Click Chopper for Heavy Machine Gun Air Drop!">
+        <svg viewBox="0 0 170 86" width="170" height="86" shape-rendering="crispEdges">
+          <!-- Searchlight beam -->
+          <polygon class="chopper-searchlight" points="56,58 12,86 78,86" fill="#ffd633"/>
+          <!-- Main Rotor Blade (Spinning) -->
+          <g class="chopper-rotor">
+            <rect x="8" y="8" width="140" height="4" fill="#111"/>
+            <rect x="14" y="9" width="128" height="2" fill="#d9d9d9"/>
+            <rect x="74" y="6" width="8" height="10" fill="#586854"/>
+          </g>
+          <!-- Tail Boom -->
+          <rect x="108" y="30" width="44" height="10" fill="#3e6b2c"/>
+          <rect x="108" y="30" width="44" height="3" fill="#5a8f3c"/>
+          <rect x="146" y="20" width="8" height="22" fill="#c0392b"/>
+          <!-- Tail Rotor -->
+          <rect x="148" y="16" width="4" height="28" fill="#ffd633"/>
+          <rect x="138" y="28" width="24" height="4" fill="#ffd633"/>
+          <!-- Fuselage Body (Olive Drab + Shark Teeth Nose) -->
+          <rect x="34" y="22" width="76" height="30" fill="#3e6b2c"/>
+          <rect x="42" y="16" width="56" height="8" fill="#5a8f3c"/>
+          <rect x="24" y="28" width="16" height="20" fill="#2e5220"/>
+          <!-- Cockpit Glass (Cyan Reflective) -->
+          <rect x="28" y="26" width="26" height="14" fill="#4dd0e1"/>
+          <rect x="32" y="28" width="8" height="6" fill="#ffffff"/>
+          <!-- Shark Mouth Nose Art -->
+          <rect x="26" y="42" width="22" height="6" fill="#b82514"/>
+          <rect x="28" y="42" width="3" height="3" fill="#ffffff"/>
+          <rect x="33" y="42" width="3" height="3" fill="#ffffff"/>
+          <rect x="38" y="42" width="3" height="3" fill="#ffffff"/>
+          <rect x="43" y="42" width="3" height="3" fill="#ffffff"/>
+          <!-- Side Star Emblem & Exhaust -->
+          <rect x="68" y="28" width="12" height="12" fill="#ffcc00"/>
+          <rect x="72" y="25" width="4" height="18" fill="#ffcc00"/>
+          <rect x="65" y="32" width="18" height="4" fill="#ffcc00"/>
+          <!-- Rocket Pod & Gatling Cannon Under-wing -->
+          <rect x="52" y="48" width="28" height="8" fill="#222"/>
+          <rect x="40" y="51" width="14" height="4" fill="#ff4d1a"/>
+          <!-- Landing Skids -->
+          <rect x="44" y="52" width="4" height="10" fill="#111"/>
+          <rect x="86" y="52" width="4" height="10" fill="#111"/>
+          <rect x="30" y="60" width="72" height="4" fill="#111"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- PARACHUTING [H] HEAVY MACHINE GUN CRATE -->
+    <div class="supply-drop" id="supply-crate" title="Click to collect [H] Heavy Machine Gun!">
+      <svg viewBox="0 0 54 74" width="54" height="74" shape-rendering="crispEdges">
+        <!-- Parachute Canopy -->
+        <rect x="8" y="4" width="38" height="8" fill="#ff4d1a"/>
+        <rect x="4" y="10" width="46" height="10" fill="#ffcc00"/>
+        <rect x="14" y="10" width="10" height="10" fill="#ff4d1a"/>
+        <rect x="30" y="10" width="10" height="10" fill="#ff4d1a"/>
+        <!-- Suspension Lines -->
+        <rect x="10" y="20" width="2" height="22" fill="#f4f1de"/>
+        <rect x="26" y="20" width="2" height="22" fill="#f4f1de"/>
+        <rect x="42" y="20" width="2" height="22" fill="#f4f1de"/>
+        <!-- [H] Weapon Crate -->
+        <rect x="11" y="42" width="32" height="28" fill="#111"/>
+        <rect x="13" y="44" width="28" height="24" fill="#ffcc00"/>
+        <rect x="15" y="46" width="24" height="20" fill="#d99b00"/>
+        <!-- Letter H -->
+        <rect x="20" y="49" width="4" height="14" fill="#111"/>
+        <rect x="30" y="49" width="4" height="14" fill="#111"/>
+        <rect x="24" y="54" width="6" height="4" fill="#111"/>
+      </svg>
+    </div>
+
+    <!-- SV-001 METAL SLUG SUPER VEHICLE TANK -->
+    <div class="sv001-tank" id="sv001" title="Click SV-001 Metal Slug Tank to Fire Cannon!">
+      <svg viewBox="0 0 180 112" width="180" height="112" shape-rendering="crispEdges">
+        <!-- Cannon Muzzle Flash (Visible on Click) -->
+        <g class="tank-muzzle">
+          <rect x="2" y="24" width="26" height="18" fill="#ff4d1a"/>
+          <rect x="8" y="28" width="18" height="10" fill="#ffcc00"/>
+          <rect x="14" y="30" width="10" height="6" fill="#ffffff"/>
+        </g>
+        <!-- Main Turret & Cannon Barrel (Facing Left) -->
+        <rect x="28" y="28" width="44" height="12" fill="#708066"/>
+        <rect x="24" y="26" width="8" height="16" fill="#46523e"/>
+        <rect x="66" y="18" width="58" height="28" fill="#5a6950"/>
+        <rect x="72" y="14" width="44" height="6" fill="#7c8f70"/>
+        <!-- Side Vulcan Gatling Gun -->
+        <rect x="42" y="46" width="36" height="8" fill="#222"/>
+        <rect x="36" y="48" width="10" height="4" fill="#ffcc00"/>
+        <!-- Exhaust Pipe & Smoke Puff -->
+        <rect x="128" y="24" width="16" height="22" fill="#8c4a27"/>
+        <rect x="142" y="12" width="14" height="12" fill="#c4c1aa" opacity=".75"/>
+        <rect x="154" y="4" width="18" height="14" fill="#f4f1de" opacity=".55"/>
+        <!-- Tank Hull Chassis -->
+        <rect x="44" y="44" width="96" height="28" fill="#46523e"/>
+        <rect x="50" y="48" width="84" height="18" fill="#5a6950"/>
+        <!-- Red/White Emblem on Hull -->
+        <rect x="88" y="50" width="16" height="12" fill="#ff4d1a"/>
+        <rect x="92" y="53" width="8" height="6" fill="#ffffff"/>
+        <!-- Heavy Treads & Road Wheels -->
+        <rect x="38" y="70" width="108" height="28" fill="#1a1d1a"/>
+        <rect x="44" y="74" width="20" height="20" fill="#3a4236"/>
+        <rect x="70" y="74" width="20" height="20" fill="#3a4236"/>
+        <rect x="96" y="74" width="20" height="20" fill="#3a4236"/>
+        <rect x="120" y="74" width="20" height="20" fill="#3a4236"/>
+        <rect x="50" y="80" width="8" height="8" fill="#ffcc00"/>
+        <rect x="76" y="80" width="8" height="8" fill="#ffcc00"/>
+        <rect x="102" y="80" width="8" height="8" fill="#ffcc00"/>
+        <rect x="126" y="80" width="8" height="8" fill="#ffcc00"/>
+      </svg>
+    </div>
+
+    <div class="shell hero-inner">
+      <div class="mission-banner">
+        <span class="blink">&#9654; MISSION 1 START!</span>
+        <span>// CREDIT 99</span>
+      </div>
+      <h1 class="name">UTHEJ&nbsp;ALAGANI</h1>
+      <p class="role">Data Analyst &middot; Data Engineer &middot; Software &amp; ML / MLOps Engineer</p>
+      <p class="stack-ticker">PySpark &middot; Databricks &middot; Azure &middot; Airflow &middot; dbt &middot; Snowflake &middot; SQL &middot; Python &middot; Power BI &middot; Tableau &middot; ETL &amp; Streaming Pipelines &middot; Fintech &middot; MSc Data Science</p>
+      <div class="meta">
+        <span class="badge live">&#9679; Open to work</span>
+        <span class="badge flag">Stamp 1G &mdash; Full Working Rights</span>
+        <span class="badge loc">Dublin / Celbridge, Ireland</span>
+        <span class="badge">PL-300 &amp; Databricks Certified</span>
+      </div>
+      <div class="cta">
+        <a class="btn primary" href="#projects">&#9654; Launch Missions</a>
+        <a class="btn ghost" href="https://github.com/DESMOND414" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/uthej-alagani" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="#contact">Radio Comms</a>
+      </div>
+    </div>
+
+    <div class="ground-strip" aria-hidden="true"></div>
+  </header>
+
+  <div class="hazard-bar" aria-hidden="true"></div>
+
+  <main class="shell">
+
+    <!-- STAGE 01: BRIEFING / ABOUT -->
+    <section id="about">
+      <p class="sec-eyebrow">&#9654; STAGE 01 // COMMAND BRIEFING</p>
+      <h2>From engines to data engines</h2>
+      <div class="about-grid">
+        <div>
+          <p class="lead">Data Engineer and Data Analyst with 3+ years of experience building the data infrastructure, analytics, and backend services behind a fintech product, plus a First-Class (1:1) MSc in Data Science &amp; Analytics from Maynooth University. Microsoft Certified Power BI Data Analyst (PL-300) and Databricks Certified Data Engineer Associate.</p>
+          <p>At Samasra Soft, I worked on <strong>Confia</strong> &mdash; an AI-driven fintech platform supporting high-risk and emerging industries &mdash; where I built and operated the pipelines, services, and reporting that the business runs on. I design and maintain large-scale ETL/ELT and real-time streaming pipelines with PySpark on Azure Databricks, Apache Kafka, and Azure Event Hubs, orchestrated by Apache Airflow and Azure Data Factory, and modelled with dbt into Snowflake and Azure Synapse. I also build Dockerized microservices exposing REST APIs that integrate third-party accounting and payment systems, and develop data-integration services in Java/Spring.</p>
+          <p>A core focus of my work is reliability and actionable Business Intelligence: automated reconciliation and data-quality checks matching transaction and payment data against accounting records before they reach a report, alongside Exploratory Data Analysis (EDA), predictive ML modelling (including an 84.1% accuracy volatility model), and interactive KPI dashboards in Power BI (DAX, Power Query), Tableau, and Excel for finance, risk, and non-technical leadership.</p>
+        </div>
+        <div class="panel facts">
+          <div class="dossier-title">&#9733; OPERATIVE DOSSIER</div>
+          <div class="fact"><span>Base of Ops</span><span>Dublin / Celbridge, IE</span></div>
+          <div class="fact"><span>Clearance</span><span>Stamp 1G (Full Rights)</span></div>
+          <div class="fact"><span>Rank / Degree</span><span>MSc Data Science (1:1)</span></div>
+          <div class="fact"><span>Field Service</span><span>3+ years</span></div>
+          <div class="fact"><span>Certifications</span><span>PL-300 &middot; Databricks</span></div>
+          <div class="fact"><span>Heavy Armor</span><span>Azure &middot; Power BI &middot; Spark</span></div>
+          <div class="fact"><span>Vehicle Permit</span><span>Full Irish Licence</span></div>
+          <div class="fact"><span>Direct Comms</span><span>+353 87 031 3890</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 02: WEAPON ARSENAL / SKILLS -->
+    <section id="skills">
+      <p class="sec-eyebrow">&#9654; STAGE 02 // WEAPON ARSENAL</p>
+      <h2>Technical stack &amp; firepower</h2>
+      <div class="skillgroups">
+        <div class="skillgroup">
+          <h3><span class="crate-icon">H</span> Programming &amp; Data Analysis</h3>
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">Pandas</span><span class="chip">NumPy</span>
+            <span class="chip">Matplotlib</span><span class="chip">Seaborn</span><span class="chip">PySpark</span>
+            <span class="chip">SQL</span><span class="chip">R</span><span class="chip">Java</span>
+            <span class="chip">TypeScript</span><span class="chip">JavaScript</span><span class="chip">Bash</span>
+            <span class="chip">GitHub Copilot (GenAI)</span>
+          </div>
+        </div>
+        <div class="skillgroup">
+          <h3><span class="crate-icon">R</span> Databases &amp; Data Platforms</h3>
+          <div class="chips">
+            <span class="chip">Azure Databricks</span><span class="chip">Delta Lake</span><span class="chip">Snowflake</span>
+            <span class="chip">Azure Synapse Analytics</span><span class="chip">Azure Data Factory (ADF)</span>
+            <span class="chip">ADLS Gen2</span><span class="chip">Apache Airflow</span><span class="chip">dbt</span>
+            <span class="chip">Apache Kafka</span><span class="chip">Azure Event Hubs</span>
+            <span class="chip">PostgreSQL</span><span class="chip">MySQL</span><span class="chip">MS SQL Server</span>
+            <span class="chip">MongoDB</span><span class="chip">DuckDB</span><span class="chip">Great Expectations</span>
+          </div>
+        </div>
+        <div class="skillgroup">
+          <h3><span class="crate-icon">S</span> BI, Reporting &amp; Spreadsheets</h3>
+          <div class="chips">
+            <span class="chip">Power BI</span><span class="chip">DAX</span><span class="chip">Power Query</span>
+            <span class="chip">Tableau</span><span class="chip">Microsoft Excel</span>
+            <span class="chip">Pivot Tables &amp; VLOOKUP</span><span class="chip">Excel Macros</span>
+            <span class="chip">KPI Dashboards</span><span class="chip">MS Office Suite</span>
+          </div>
+        </div>
+        <div class="skillgroup">
+          <h3><span class="crate-icon">F</span> Data Processes &amp; Analytics</h3>
+          <div class="chips">
+            <span class="chip">Data Cleaning</span><span class="chip">EDA &amp; Visualisation</span>
+            <span class="chip">ETL / ELT Workflows</span><span class="chip">Dimensional Data Modelling</span>
+            <span class="chip">Star Schema (Fact / Dim)</span><span class="chip">Data Warehousing</span>
+            <span class="chip">Data Validation &amp; Reconciliation</span><span class="chip">Data Accuracy &amp; Integrity</span>
+            <span class="chip">Root Cause Analysis</span><span class="chip">Process Analysis</span>
+            <span class="chip">Technical Documentation</span>
+          </div>
+        </div>
+        <div class="skillgroup">
+          <h3><span class="crate-icon">L</span> Machine Learning, AI &amp; MLOps</h3>
+          <div class="chips">
+            <span class="chip">scikit-learn</span><span class="chip">XGBoost</span><span class="chip">PyTorch</span>
+            <span class="chip">Deep Learning (CNN)</span><span class="chip">NLP / FinBERT</span>
+            <span class="chip">Statistical &amp; Predictive Analysis</span><span class="chip">Time-Series Analysis</span>
+            <span class="chip">Regression Analysis</span><span class="chip">Clustering</span>
+            <span class="chip">Forecasting</span><span class="chip">MLflow</span><span class="chip">FastAPI</span>
+          </div>
+        </div>
+        <div class="skillgroup">
+          <h3><span class="crate-icon">C</span> Backend, Cloud &amp; DevOps</h3>
+          <div class="chips">
+            <span class="chip">Microsoft Azure</span><span class="chip">Azure DevOps</span>
+            <span class="chip">Spring / Spring Boot</span><span class="chip">REST APIs</span>
+            <span class="chip">Microservices</span><span class="chip">Docker</span><span class="chip">Kubernetes</span>
+            <span class="chip">Terraform</span><span class="chip">CI/CD</span><span class="chip">Git &amp; GitHub Actions</span>
+            <span class="chip">JWT / OAuth2</span><span class="chip">Angular &amp; React</span>
+          </div>
+        </div>
+        <div class="skillgroup">
+          <h3><span class="crate-icon">G</span> CS &amp; Professional Skills</h3>
+          <div class="chips">
+            <span class="chip">Data Structures &amp; Algorithms</span><span class="chip">OOP / OOD &amp; System Design</span>
+            <span class="chip">Analytical Thinking</span><span class="chip">Problem Solving</span>
+            <span class="chip">Stakeholder Communication</span><span class="chip">Collaboration</span>
+            <span class="chip">Attention to Detail</span><span class="chip">Time Management</span>
+            <span class="chip">Agile / Scrum</span><span class="chip">JUnit &amp; Testing</span>
+            <span class="chip">Code Reviews</span><span class="chip">Continuous Learning</span>
+          </div>
+        </div>
+        <div class="skillgroup">
+          <h3><span class="crate-icon">&#9733;</span> Certifications &amp; Training</h3>
+          <div class="chips">
+            <span class="chip cert">Microsoft Certified: Power BI Data Analyst Associate (PL-300)</span>
+            <span class="chip cert">Databricks Certified Data Engineer Associate</span>
+            <span class="chip cert">Tableau Desktop Specialist (Training)</span>
+            <span class="chip">Data Analytics with Python (Training)</span>
+            <span class="chip">Business Analytics with Excel (Training)</span>
+            <span class="chip">SQL Certification (Training)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 03: COMBAT MISSIONS / PROJECTS -->
+    <section id="projects">
+      <p class="sec-eyebrow">&#9654; STAGE 03 // COMBAT MISSIONS</p>
+      <h2>Featured deployments &amp; projects</h2>
+      <div class="filters" role="group" aria-label="Filter projects">
+        <button class="filter" data-filter="all" aria-pressed="true">All Missions</button>
+        <button class="filter" data-filter="da" aria-pressed="false">[S] Data Analytics &amp; BI</button>
+        <button class="filter" data-filter="de" aria-pressed="false">[H] Data Engineering</button>
+        <button class="filter" data-filter="ds" aria-pressed="false">[L] Data Science &amp; ML</button>
+        <button class="filter" data-filter="mlops" aria-pressed="false">[R] MLOps</button>
+      </div>
+
+      <div class="projects">
+
+        <article class="card panel" data-cat="da de">
+          <div class="tags"><span class="tag">Python</span><span class="tag">MySQL</span><span class="tag">Power BI</span><span class="tag">DAX</span></div>
+          <h3>Intelligent UK Skills Demand Forecasting &amp; Salary Integrity Engine</h3>
+          <p>Automated Python-to-SQL-to-Power BI pipeline that cleans 100,000 UK job postings, quarantines impossible records, and delivers skills-demand and salary-benchmarking insights.</p>
+          <ul>
+            <li>Standardised 5 mixed date formats, cleaned &lsquo;&pound;&rsquo; salary strings, enforced numeric types, and built vectorised anomaly filters to quarantine impossible records (min &gt; max salary, closing &lt; posting date).</li>
+            <li>Engineered a Posting Attractiveness Score &amp; Role Salary Volatility Index (CV), wrote correlated subqueries and conditional aggregation in MySQL to detect salary gaps and false-seniority labelling.</li>
+            <li>Built an interactive Power BI dashboard with DAX smart narratives, multi-condition KPI alerts, and a &ldquo;Remote Policy Adoption&rdquo; what-if slider projecting applicant uplift.</li>
+          </ul>
+          <div class="metrics">
+            <div class="metric"><b>100k</b><small>postings cleaned</small></div>
+            <div class="metric"><b>~8.4k</b><small>quarantined rows</small></div>
+            <div class="metric"><b>20</b><small>seniority tiers fixed</small></div>
+          </div>
+          <div class="links">
+            <a href="https://github.com/DESMOND414" target="_blank" rel="noopener">GitHub &#8599;</a>
+          </div>
+        </article>
+
+        <article class="card panel" data-cat="da de">
+          <div class="tags"><span class="tag">Python</span><span class="tag">MySQL</span><span class="tag">SQLAlchemy</span><span class="tag">Power BI</span></div>
+          <h3>Credit Fraud Trends &amp; Credit Score Analysis</h3>
+          <p>End-to-end credit risk segmentation and fraud monitoring solution evaluating customer credit histories and card transactions across relational financial datasets.</p>
+          <ul>
+            <li>Joined 5 relational tables (customers, accounts, transactions, credit history, fraud records) in MySQL to extract holistic financial profiles.</li>
+            <li>Preprocessed data in Python (Pandas, NumPy) to compute delinquency rates, credit utilisation, spending averages, and location consistency metrics, segmenting customers into low, medium, and high risk tiers.</li>
+            <li>Built interactive Power BI (Power Query, DAX) dashboards featuring geographic fraud heatmaps, time-series fraud trend charts, and credit utilisation vs. delinquency plots.</li>
+          </ul>
+          <div class="metrics">
+            <div class="metric"><b>5</b><small>relational tables</small></div>
+            <div class="metric"><b>3</b><small>credit risk tiers</small></div>
+            <div class="metric"><b>Geo+TS</b><small>fraud dashboards</small></div>
+          </div>
+          <div class="links">
+            <a href="https://github.com/DESMOND414" target="_blank" rel="noopener">GitHub &#8599;</a>
+          </div>
+        </article>
+
+        <article class="card panel" data-cat="ds">
+          <div class="tags"><span class="tag">PyTorch</span><span class="tag">FinBERT</span><span class="tag">XGBoost</span><span class="tag">CNN</span></div>
+          <h3>Stock Volatility Prediction &mdash; MSc Thesis</h3>
+          <p>End-to-end ML pipeline predicting stock-volatility regimes by combining financial news sentiment (FinBERT), deep learning over price sequences (CNN with attention), and an XGBoost ensemble.</p>
+          <ul>
+            <li>Collected, cleaned, and aligned noisy multi-source financial news and NASDAQ-100 market time-series data into a unified training dataset using Python (Pandas, scikit-learn, PyTorch).</li>
+            <li>Engineered domain features and tracked experiments across model variants, validating with train/validation/test splits and walk-forward testing.</li>
+          </ul>
+          <div class="metrics">
+            <div class="metric"><b>84.1%</b><small>XGBoost acc.</small></div>
+            <div class="metric"><b>82.1%</b><small>CNN+attn.</small></div>
+            <div class="metric"><b>1:1</b><small>thesis grade</small></div>
+          </div>
+          <div class="links">
+            <a href="https://www.linkedin.com/in/uthej-alagani" target="_blank" rel="noopener">Details &#8599;</a>
+          </div>
+        </article>
+
+        <article class="card panel" data-cat="de ds mlops">
+          <div class="tags"><span class="tag">Azure</span><span class="tag">XGBoost</span><span class="tag">FastAPI</span><span class="tag">Airflow</span></div>
+          <h3>Irish Electricity Demand Forecasting</h3>
+          <p>End-to-end platform forecasting Ireland's national electricity demand (MW) from live EirGrid + weather data: Azure data lake, dbt + Great Expectations, MLflow, a live API, CI/CD, Airflow orchestration and drift monitoring.</p>
+          <div class="metrics">
+            <div class="metric"><b>0.96%</b><small>MAPE</small></div>
+            <div class="metric"><b>&minus;57%</b><small>vs baseline</small></div>
+            <div class="metric"><b>12</b><small>pipeline stages</small></div>
+          </div>
+          <div class="links">
+            <a href="https://github.com/DESMOND414/irish-energy-demand-mlops" target="_blank" rel="noopener">GitHub &#8599;</a>
+            <a href="https://energy-demand-api.bluedesert-d99535e4.switzerlandnorth.azurecontainerapps.io/docs" target="_blank" rel="noopener">Live API &#8599;</a>
+          </div>
+        </article>
+
+        <article class="card panel" data-cat="de">
+          <div class="tags"><span class="tag">Databricks</span><span class="tag">Kafka</span><span class="tag">Delta Lake</span><span class="tag">Terraform</span></div>
+          <h3>Dublin Pulse &mdash; Streaming Lakehouse</h3>
+          <p>Real-time urban-mobility lakehouse on Azure: live Dublin Bikes + weather streamed through Event Hubs into a Databricks Delta medallion architecture, with Unity Catalog governance and Power BI serving.</p>
+          <div class="metrics">
+            <div class="metric"><b>15-min</b><small>streaming</small></div>
+            <div class="metric"><b>Bronze&rarr;Gold</b><small>medallion</small></div>
+            <div class="metric"><b>Unity</b><small>catalog</small></div>
+          </div>
+          <div class="links">
+            <a href="https://github.com/DESMOND414" target="_blank" rel="noopener">GitHub &#8599;</a>
+          </div>
+        </article>
+
+        <article class="card panel" data-cat="de">
+          <div class="tags"><span class="tag">Snowflake</span><span class="tag">dbt</span><span class="tag">Airflow</span><span class="tag">CI/CD</span></div>
+          <h3>Ireland Econ Warehouse &mdash; Batch ELT</h3>
+          <p>Batch ELT platform on Snowflake-on-Azure: CSO Ireland open data loaded via external stages, modelled into a tested star schema with dbt, orchestrated with a Dockerised Airflow DAG, quality-gated and shipped with GitHub Actions.</p>
+          <div class="metrics">
+            <div class="metric"><b>Star</b><small>schema</small></div>
+            <div class="metric"><b>Nightly</b><small>DAG</small></div>
+            <div class="metric"><b>MLflow</b><small>forecasting</small></div>
+          </div>
+          <div class="links">
+            <a href="https://github.com/DESMOND414" target="_blank" rel="noopener">GitHub &#8599;</a>
+          </div>
+        </article>
+
+        <article class="card panel" data-cat="da ds">
+          <div class="tags"><span class="tag">Python</span><span class="tag">PostgreSQL</span><span class="tag">Regression</span><span class="tag">Geospatial</span></div>
+          <h3>Irish Property Price Analysis</h3>
+          <p>Cleaned and analysed the full Property Price Register (795k+ rows, 2010&ndash;2026): a Postgres-loaded pipeline, window-function SQL for county growth trends, a price-prediction model and a Plotly choropleth dashboard.</p>
+          <div class="metrics">
+            <div class="metric"><b>795k</b><small>rows</small></div>
+            <div class="metric"><b>26</b><small>counties</small></div>
+            <div class="metric"><b>+112%</b><small>top growth</small></div>
+          </div>
+          <div class="links">
+            <a href="https://github.com/DESMOND414/irish-property-price-analysis" target="_blank" rel="noopener">GitHub &#8599;</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- STAGE 04: SERVICE RECORD / EXPERIENCE -->
+    <section id="experience">
+      <p class="sec-eyebrow">&#9654; STAGE 04 // SERVICE RECORD</p>
+      <h2>Field experience</h2>
+      <div class="timeline">
+        <div class="job">
+          <div class="dot">01</div>
+          <div class="panel" style="flex:1">
+            <p class="when">Apr 2026 &ndash; Present &middot; Remote (London, UK)</p>
+            <h3>Data Analyst (Intern)</h3>
+            <p class="org">Fortray Global Services LTD</p>
+            <ul>
+              <li>Cleaned, transformed, and prepared 15+ raw datasets using Python (Pandas, NumPy) and Excel Power Query, reducing manual data preparation effort by 25%.</li>
+              <li>Queried and combined 50K+ records from SQL databases and Excel sources, creating standardised, analysis-ready datasets for regional business metrics.</li>
+              <li>Performed exploratory data analysis (EDA) with Pandas, Matplotlib, and Excel to uncover operational trends and communicate evidence-based insights to senior analysts.</li>
+              <li>Applied descriptive statistics and linear regression to analyse performance measures, correlations, and variations in business data.</li>
+              <li>Designed and supported 4 interactive Power BI and Tableau dashboards, giving stakeholders real-time access to KPI reporting and data visualisation.</li>
+              <li>Collaborated with senior colleagues on data pipeline validation, data quality discrepancy resolution, and documentation of internal data workflows.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="job">
+          <div class="dot">02</div>
+          <div class="panel" style="flex:1">
+            <p class="when">Mar 2023 &ndash; Aug 2024 (1 yr 6 mos) &middot; Tirupati, Andhra Pradesh, India</p>
+            <h3>Software Engineer &ndash; Data Engineering / Data Engineer</h3>
+            <p class="org">Samasra Soft Inc &mdash; Confia Fintech Platform</p>
+            <ul>
+              <li>Built and maintained scalable ETL/ELT PySpark pipelines on Azure Databricks processing millions of payment and transaction records daily for the Confia fintech platform (+25% processing efficiency), handling deduplication, currency/timestamp standardisation, and customer- and merchant-level aggregate features.</li>
+              <li>Orchestrated end-to-end pipelines with Apache Airflow and Azure Data Factory, scheduling Databricks jobs, managing ingestion-to-transformation dependencies, triggering dbt runs, and handling retries and failure alerts (~30% faster execution with monitoring).</li>
+              <li>Modelled curated, analysis-ready and ML-ready analytics datasets in Snowflake and Azure Synapse Analytics using dbt (staging, fact, and dimension models) with automated data tests for unique transaction IDs, non-null customer IDs, and valid statuses.</li>
+              <li>Built real-time event streaming pipelines on Apache Kafka and Azure Event Hubs for payment-created / completed / failed and refund events, feeding fraud monitoring and downstream analytics.</li>
+              <li>Designed and deployed automated ELT pipelines on Azure (Data Factory, ADLS Gen2, Synapse) with Delta Lake storage for financial transaction data and risk reporting.</li>
+              <li>Built Dockerized microservices exposing REST APIs that integrated third-party accounting systems and payment rails (ACH direct debits, wire transfers, check payments), with Java/Spring Boot integration services and CI/CD on Azure DevOps.</li>
+              <li>Owned data quality, validation, and reconciliation across production pipelines; developed Power BI dashboards and DAX data models for finance, risk, and non-technical leadership that improved operational efficiency by 10%.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="job">
+          <div class="dot">03</div>
+          <div class="panel" style="flex:1">
+            <p class="when">Jul 2021 &ndash; Mar 2023 (1 yr 9 mos) &middot; Tirupati, Andhra Pradesh, India</p>
+            <h3>Junior Software Engineer &ndash; Data Engineering / Junior Data Engineer</h3>
+            <p class="org">Samasra Soft Inc &mdash; Confia &amp; DDIQ</p>
+            <ul>
+              <li>Built and maintained SQL and PySpark data pipelines sourcing from the data warehouse to automate recurring finance, transaction, and business reporting.</li>
+              <li>Developed automated data validation and reconciliation checks across transaction and payment datasets to keep reporting datasets accurate, consistent, and reliable.</li>
+              <li>Supported PySpark and ETL ingestion workflows for the Confia fintech platform under senior engineers.</li>
+              <li>Built and maintained Power BI dashboards and reports with DAX measures that gave finance, operations, and business stakeholders clear visibility of key performance metrics.</li>
+              <li>Analysed transaction and customer data using SQL and Python (Pandas) and performed data cleaning, profiling, and exploratory data analysis (EDA) on large financial datasets to surface trends and support business decisions.</li>
+              <li>Assisted in building REST API integrations, backend data services (Java/Spring, Python, SQL), and UI components (Angular/React), while maintaining technical documentation for pipelines and reporting logic.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 05: ACADEMY / EDUCATION -->
+    <section id="education">
+      <p class="sec-eyebrow">&#9654; STAGE 05 // OFFICER ACADEMY</p>
+      <h2>Education</h2>
+      <div class="edu">
+        <div class="panel">
+          <p class="when">Aug 2024 &ndash; Aug 2025 &middot; Maynooth, Ireland</p>
+          <h3>MSc in Data Science &amp; Analytics</h3>
+          <p class="org">Maynooth University</p>
+          <p class="note">First Class Honours (1:1). Master's thesis on Stock Volatility Prediction combining FinBERT financial-news sentiment, CNN over price sequences, and XGBoost ensemble modelling (84.1% accuracy).</p>
+        </div>
+        <div class="panel">
+          <p class="when">2019 &ndash; 2022 &middot; Tirupati, India</p>
+          <h3>BEng in Mechanical Engineering</h3>
+          <p class="org">SVCE, Tirupati</p>
+          <p class="note">First Class. Strong quantitative foundation in systems thinking, mathematical modelling, and engineering problem-solving.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL STAGE: RADIO COMMS / CONTACT -->
+    <section id="contact" class="contact">
+      <p class="sec-eyebrow" style="text-align:center">&#9654; FINAL STAGE // RADIO COMMS</p>
+      <div class="panel">
+        <h2>Hiring in Ireland? Send transmission.</h2>
+        <p style="margin:0 auto">Open to Data Engineer, Data Analyst, Business Intelligence, Data Scientist, Software Engineer, and MLOps roles. Based in Dublin / Celbridge with Full Working Rights in Ireland (Stamp 1G) and a Full Irish Driving Licence. References available upon request.</p>
+        <div class="email-row">
+          <span class="email" id="email">alagani.uthej12@outlook.com</span>
+          <button class="copybtn" id="copy" type="button">Copy Freq</button>
+        </div>
+        <p style="font-family:var(--font-mono);font-weight:700;font-size:14px;color:var(--fg);margin:0">&#9742; <a href="tel:+353870313890">+353 87 031 3890</a> &middot; Dublin / Celbridge, Co. Kildare, Ireland</p>
+        <div class="cta" style="justify-content:center;margin-top:8px">
+          <a class="btn primary" href="mailto:alagani.uthej12@outlook.com">Email Me</a>
+          <a class="btn ghost" href="https://www.linkedin.com/in/uthej-alagani" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="https://github.com/DESMOND414" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="hazard-bar" aria-hidden="true"></div>
+
+  <footer class="shell">
+    <p>MISSION COMPLETE! &middot; UTHEJ ALAGANI &middot; DUBLIN, IRELAND &middot; INSERT COIN TO CONTINUE</p>
+  </footer>
+</div>
+
+<script>
+  // Arcade Score & Callout Spawner
+  var scoreEl = document.getElementById('hud-score');
+  var ammoEl = document.getElementById('hud-ammo');
+  var score = 84100;
+  var ammo = 999;
+
+  function addScore(pts, text, x, y){
+    score += pts;
+    if(scoreEl){
+      var s = String(score);
+      while(s.length < 7) s = '0' + s;
+      scoreEl.textContent = s;
+    }
+    if(typeof x === 'number' && typeof y === 'number'){
+      var pop = document.createElement('div');
+      pop.className = 'arcade-popup';
+      pop.textContent = text || ('+' + pts);
+      pop.style.left = Math.max(12, Math.min(window.innerWidth - 220, x - 40)) + 'px';
+      pop.style.top = Math.max(12, y - 16) + 'px';
+      document.body.appendChild(pop);
+      setTimeout(function(){ if(pop.parentNode) pop.parentNode.removeChild(pop); }, 950);
+    }
+  }
+
+  // Interactive Chopper, Supply Crate & SV-001 Tank
+  (function(){
+    var chopper = document.getElementById('chopper');
+    var crate = document.getElementById('supply-crate');
+    var tank = document.getElementById('sv001');
+    var callouts = ['HEAVY MACHINE GUN!', 'ROCKET LAUNCHER!', 'SUPER GRENADE!', 'SHOTGUN!', 'LASER GUN!', 'MISSION START!'];
+    var idx = 0;
+
+    if(chopper){
+      chopper.addEventListener('click', function(e){
+        var msg = callouts[idx % callouts.length];
+        idx++;
+        addScore(1000, msg, e.clientX, e.clientY);
+      });
+    }
+    if(crate){
+      crate.addEventListener('click', function(e){
+        ammo = 999;
+        if(ammoEl) ammoEl.textContent = ammo;
+        addScore(2500, 'HEAVY MACHINE GUN! [999]', e.clientX, e.clientY);
+      });
+    }
+    if(tank){
+      tank.addEventListener('click', function(e){
+        tank.classList.add('firing');
+        setTimeout(function(){ tank.classList.remove('firing'); }, 180);
+        if(ammo > 0) ammo = Math.max(0, ammo - 10);
+        if(ammoEl) ammoEl.textContent = ammo;
+        addScore(1500, 'SV-001 CANNON FIRE!', e.clientX, e.clientY);
+      });
+    }
+  })();
+
+  // Project filtering + Arcade Callout
+  (function(){
+    var buttons = document.querySelectorAll('.filter');
+    var cards = document.querySelectorAll('.projects .card');
+    buttons.forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        var f = btn.getAttribute('data-filter');
+        buttons.forEach(function(b){ b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+        cards.forEach(function(c){
+          var cats = c.getAttribute('data-cat') || '';
+          var show = (f === 'all') || cats.split(' ').indexOf(f) !== -1;
+          c.classList.toggle('hidden', !show);
+        });
+        addScore(500, 'OKAY! +500', e.clientX, e.clientY);
+      });
+    });
+  })();
+
+  // Copy email (clipboard with graceful fallback to selection)
+  (function(){
+    var btn = document.getElementById('copy');
+    var email = document.getElementById('email');
+    if(!btn) return;
+    function select(){
+      try{
+        var r = document.createRange(); r.selectNodeContents(email);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        btn.textContent = 'Select + copy';
+        setTimeout(function(){ btn.textContent = 'Copy Freq'; }, 1800);
+      }catch(_){}
+    }
+    btn.addEventListener('click', function(e){
+      var text = email.textContent.trim();
+      var done = function(){
+        btn.textContent = 'MISSION COMPLETE!';
+        addScore(2000, 'TRANSMISSION COPIED!', e.clientX, e.clientY);
+        setTimeout(function(){ btn.textContent = 'Copy Freq'; }, 1600);
+      };
+      try{
+        navigator.clipboard.writeText(text).then(done).catch(select);
+      }catch(err){ select(); }
+    });
+  })();
+</script>
+</body>
+</html>
